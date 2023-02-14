@@ -12,7 +12,7 @@
     "url": "git+https://github.com/Hisun0/frontend-project-46.git"
   },
   "bin": {
-    "gendiff": "node/gendiff.js"
+    "gendiff": "bin/gendiff.js"
   },
   "author": "Rodion",
   "license": "ISC",

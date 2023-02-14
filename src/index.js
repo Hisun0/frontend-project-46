@@ -11,22 +11,25 @@ const genDiff = (filename1, filename2) => {
     const filePath2 = getAbsolutePath(filename2);
     const data1 = JSON.parse(fs.readFileSync(filePath1));
     const data2 = JSON.parse(fs.readFileSync(filePath2));
-    const keys1 = Object.entries(data1);
-    const keys2 = Object.entries(data2);
+    const keys1 = Object.keys(data1);
+    const keys2 = Object.keys(data2);
+    const unionKeys = _.union(keys1, keys2);
 
-    const result = keys1.reduce((acc, currentValue) => {
-        if (!keys2[0][0].includes(currentValue[0])) {
-            acc += currentValue[0];
-            if (!keys2[0][0].includes(currentValue[1])) {
-                acc += currentValue[1];
-            }
+    const result = unionKeys.reduce((acc, currentValue) => {
+        if (!Object.hasOwn(data2, currentValue)) {
+            acc += `- ${currentValue}: "${data1[currentValue]}"\n`;
+        } else if (!Object.hasOwn(data1, currentValue)) {
+            acc += `+ ${currentValue}: "${data2[currentValue]}"\n`;
+        } else if (data1[currentValue] !== data2[currentValue]) {
+            acc += `- ${currentValue}: "${data1[currentValue]}"\n`;
+            acc += `+ ${currentValue}: "${data2[currentValue]}"\n`;
+        } else {
+            acc += `  ${currentValue}: "${data1[currentValue]}"\n`;
         }
-        return ['{', acc];
+        return acc;
     }, '');
-
-    console.log(keys1[0][0]);
-    console.log(result);
-}
+    console.log(`{\n${result}}`);
+};
 
 export {  
     genDiff,
