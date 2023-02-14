@@ -31,9 +31,7 @@ const genDiff = (filename1, filename2) => {
     console.log(`{\n${result}}`);
 };
 
-export {  
-    genDiff,
-    getAbsolutePath,
+export {
+  genDiff,
+  getAbsolutePath,
 };
-
-genDiff('file1.json', 'file2.json');
