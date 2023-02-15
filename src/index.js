@@ -20,7 +20,7 @@ const getUnionKeys = (data1, data2) => {
     const keys2 = Object.keys(data2);
     const unionKeys = _.union(keys1, keys2);
 
-    return unionKeys;
+    return unionKeys.sort();
 };
 
 const genDiff = (filename1, filename2) => {
