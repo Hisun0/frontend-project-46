@@ -4,7 +4,7 @@ import path from 'path';
 
 const getAbsolutePath = (filename) => path.resolve(process.cwd(), filename);
 
-const getFileExtension = (filename) => filename.split('.').pop();
+const getFileExtension = (filename) => path.extname(filename);
 
 const getJSONFromFile = (filePath) => {
   const absolutePath = getAbsolutePath(filePath);
@@ -22,7 +22,7 @@ const getYamlFromFile = (filePath) => {
 
 const getParseFile = (filename) => {
   const extension = getFileExtension(filename);
-  if (extension === 'yaml' || extension === 'yml') {
+  if (extension === '.yaml' || extension === '.yml') {
     return getYamlFromFile(filename);
   }
   return getJSONFromFile(filename);
