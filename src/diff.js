@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import getParseFile from './parsers/parse.js';
 import toDiffTree from './formaters/stylish.js';
 
