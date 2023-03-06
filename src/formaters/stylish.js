@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import getParseFile from '../parsers/parse.js';
-import { getUnionKeys } from '../utils.js';
+import { toDiffTree } from '../utils.js';
 
 const labels = {
   deleted: '- ',
@@ -11,25 +11,6 @@ const labels = {
 
 const obj1 = getParseFile('__fixtures__/file1.json');
 const obj2 = getParseFile('__fixtures__/file2.json');
-
-const toDiffTree = (data1, data2) => {
-  const unionKeys = getUnionKeys(data1, data2);
-  const result = unionKeys.map((key) => {
-    if (_.isObject(data1[key]) && _.isObject(data2[key])) {
-      return { key, children: toDiffTree(data1[key], data2[key]), status: 'nested' };
-    }
-
-    if (!Object.hasOwn(data2, key)) {
-      return ({ key, value: data1[key], status: 'deleted' });
-    } if (!Object.hasOwn(data1, key)) {
-      return ({ key, value: data2[key], status: 'added' });
-    } if (data1[key] !== data2[key]) {
-      return ({ key, value: data1[key], status: 'changed' });
-    }
-    return ({ key, value: data1[key], status: 'unchanged' });
-  });
-  return result;
-};
 
 // console.log(toDiffTree(data1, data2));
 
