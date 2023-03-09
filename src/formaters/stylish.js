@@ -7,9 +7,7 @@ const labels = {
   unchanged: '  ',
 };
 
-const stylish = (tree) => {
-  const spacesCount = 4;
-  const replacer = ' ';
+const stylish = (tree, spacesCount = 4, replacer = ' ') => {
   const iter = (el, depth) => {
     const indentSize = depth * spacesCount;
     const indent = replacer.repeat(indentSize - 2);
