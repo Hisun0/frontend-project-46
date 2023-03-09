@@ -7,6 +7,10 @@ const labels = {
   unchanged: '  ',
 };
 
+const makeDiffString = (indent, type, key, value, depth) => {
+  return `${indent}${labels[type]}${key}: ${stringify(value, depth + 1)}`;
+};
+
 const stylish = (tree, spacesCount = 4, replacer = ' ') => {
   const iter = (el, depth) => {
     const indentSize = depth * spacesCount;
@@ -17,13 +21,13 @@ const stylish = (tree, spacesCount = 4, replacer = ' ') => {
       if (status === 'nested') {
         return `${indent}${labels.nested}${key}: ${iter(value, depth + 1)}`;
       } if (status === 'deleted') {
-        return `${indent}${labels.deleted}${key}: ${stringify(value, depth + 1)}`;
+        return makeDiffString(indent, 'deleted', key, value, depth);
       } if (status === 'added') {
-        return `${indent}${labels.added}${key}: ${stringify(value, depth + 1)}`;
+        return makeDiffString(indent, 'added', key, value, depth);
       } if (status === 'changed') {
-        return `${indent}${labels.deleted}${key}: ${stringify(value.oldValue, depth + 1)}\n${indent}${labels.added}${key}: ${stringify(value.newValue, depth + 1)}`;
+        return `${makeDiffString(indent, 'deleted', key, value.oldValue, depth)}\n${makeDiffString(indent, 'added', key, value.newValue, depth)}`;
       } if (status === 'unchanged') {
-        return `${indent}${labels.unchanged}${key}: ${stringify(value, depth + 1)}`;
+        return makeDiffString(indent, 'unchanged', key, value, depth);
       }
       return new Error('Something went wrong.. Try again!');
     });
