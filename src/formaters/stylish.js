@@ -7,9 +7,7 @@ const labels = {
   unchanged: '  ',
 };
 
-const makeDiffString = (indent, type, key, value, depth) => {
-  return `${indent}${labels[type]}${key}: ${stringify(value, depth + 1)}`;
-};
+const makeDiffString = (indent, type, key, value, depth) => `${indent}${labels[type]}${key}: ${stringify(value, depth + 1)}`;
 
 const stylish = (tree, spacesCount = 4, replacer = ' ') => {
   const iter = (el, depth) => {
