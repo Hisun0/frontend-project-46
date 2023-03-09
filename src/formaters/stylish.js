@@ -1,5 +1,4 @@
-import getParseFile from '../parsers/parse.js';
-import { toDiffTree, stringify } from '../utils.js';
+import { stringify } from '../utils.js';
 
 const labels = {
   deleted: '- ',
@@ -8,38 +7,32 @@ const labels = {
   unchanged: '  ',
 };
 
-const obj1 = getParseFile('__fixtures__/file1.json');
-const obj2 = getParseFile('__fixtures__/file2.json');
-
-// console.log(toDiffTree(data1, data2));
-
 const stylish = (tree) => {
-  const spacesCount = 2;
+  const spacesCount = 4;
   const replacer = ' ';
   const iter = (el, depth) => {
     const indentSize = depth * spacesCount;
-    const indent = replacer.repeat(indentSize);
+    const indent = replacer.repeat(indentSize - 2);
     const bracketIndent = replacer.repeat(indentSize - spacesCount);
 
-    const lines = el.flatMap(({ key, value, status }) => {
+    const lines = el.map(({ key, value, status }) => {
       if (status === 'nested') {
-        return `${indent}${labels.nested}${key}: ${iter(value, depth + 2)}`;
-      } else if (status === 'deleted') {
-        return `${indent}${labels.deleted}${key}: ${stringify(value, depth + 2)}`;
-      } else if (status === 'added') {
-        return `${indent}${labels.added}${key}: ${stringify(value, depth + 2)}`;
-      } else if (status === 'changed') {
-        return `${indent}${labels.deleted}${key}: ${stringify(value.oldValue, depth + 2)}\n${indent}${labels.added}${key}: ${stringify(value.newValue, depth + 2)}`;
-      } else if (status === 'unchanged') {
-        return `${indent}${labels.unchanged}${key}: ${stringify(value, depth + 2)}`;
+        return `${indent}${labels.nested}${key}: ${iter(value, depth + 1)}`;
+      } if (status === 'deleted') {
+        return `${indent}${labels.deleted}${key}: ${stringify(value, depth + 1)}`;
+      } if (status === 'added') {
+        return `${indent}${labels.added}${key}: ${stringify(value, depth + 1)}`;
+      } if (status === 'changed') {
+        return `${indent}${labels.deleted}${key}: ${stringify(value.oldValue, depth + 1)}\n${indent}${labels.added}${key}: ${stringify(value.newValue, depth + 1)}`;
+      } if (status === 'unchanged') {
+        return `${indent}${labels.unchanged}${key}: ${stringify(value, depth + 1)}`;
       }
+      return new Error('Something went wrong.. Try again!');
     });
     const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
     return result;
   };
   return iter(tree, 1);
 };
-const tree = toDiffTree(obj1, obj2);
-//console.log(JSON.stringify(tree, ' ', 2));
-console.log(stylish(tree));
+
 export default stylish;

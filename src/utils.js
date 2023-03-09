@@ -18,7 +18,7 @@ const stringify = (value, depth) => {
   const indent = replacer.repeat(indentSize);
   const bracketIndent = replacer.repeat(indentSize - spacesCount);
 
-  const lines = Object.entries(value).map(([key, val]) => `${indent}${key}: ${val}`);
+  const lines = Object.entries(value).map(([key, val]) => `${indent}${key}: ${stringify(val, depth + 1)}`);
   const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
   return result;
 };
@@ -28,9 +28,7 @@ const toDiffTree = (data1, data2) => {
   const result = unionKeys.map((key) => {
     if (_.isObject(data1[key]) && _.isObject(data2[key])) {
       return { key, value: toDiffTree(data1[key], data2[key]), status: 'nested' };
-    }
-
-    if (!Object.hasOwn(data2, key)) {
+    } if (!Object.hasOwn(data2, key)) {
       return ({ key, value: data1[key], status: 'deleted' });
     } if (!Object.hasOwn(data1, key)) {
       return ({ key, value: data2[key], status: 'added' });
