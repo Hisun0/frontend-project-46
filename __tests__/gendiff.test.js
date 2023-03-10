@@ -50,7 +50,7 @@ test('plain diff between two files', () => {
   expect(genDiff(filepath1, filepath2, 'plain')).toEqual(expectedFile);
 });
 
-test('plain diff between two files', () => {
+test('json diff between two files', () => {
   const filepath1 = getFixturePath('nested_file1.json');
   const filepath2 = getFixturePath('nested_file2.json');
   const expectedFile = readFile('expected_json_file.txt');
