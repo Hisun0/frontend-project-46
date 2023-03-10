@@ -35,6 +35,7 @@ const plain = (tree) => {
       } if (status === 'unchanged') {
         return [];
       }
+      throw new Error('Unknown format!');
     });
     return lines.join('\n');
   };
