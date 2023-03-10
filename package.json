@@ -5,7 +5,7 @@
   "main": "gendiff.js",
   "type": "module",
   "scripts": {
-    "test": "npx jest --bail --runInBand"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
