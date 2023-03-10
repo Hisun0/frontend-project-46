@@ -41,3 +41,19 @@ test('diff between two nested yml', () => {
 
   expect(genDiff(filepath1, filepath2)).toEqual(expectedFile);
 });
+
+test('plain diff between two files', () => {
+  const filepath1 = getFixturePath('nested_file1.json');
+  const filepath2 = getFixturePath('nested_file2.json');
+  const expectedFile = readFile('expected_plain_file.txt');
+
+  expect(genDiff(filepath1, filepath2, 'plain')).toEqual(expectedFile);
+});
+
+test('plain diff between two files', () => {
+  const filepath1 = getFixturePath('nested_file1.json');
+  const filepath2 = getFixturePath('nested_file2.json');
+  const expectedFile = readFile('expected_json_file.txt');
+
+  expect(genDiff(filepath1, filepath2, 'json')).toEqual(expectedFile);
+});
