@@ -5,7 +5,7 @@ const getUnionKeys = (data1, data2) => {
   const keys2 = Object.keys(data2);
   const unionKeys = _.union(keys1, keys2);
 
-  return unionKeys.sort();
+  return unionKeys;
 };
 
 const stringify = (value, depth) => {
@@ -39,7 +39,7 @@ const toDiffTree = (data1, data2) => {
     }
     throw new Error('Something went wrong.. Try again!');
   });
-  return result;
+  return _.sortBy(result, (el) => el.key);
 };
 
 export {
