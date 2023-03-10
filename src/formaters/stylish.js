@@ -27,7 +27,7 @@ const stylish = (tree, spacesCount = 4, replacer = ' ') => {
       } if (status === 'unchanged') {
         return makeDiffString(indent, 'unchanged', key, value, depth);
       }
-      throw new Error('Unexpected status!')
+      throw new Error('Unexpected status!');
     });
     const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
     return result;
