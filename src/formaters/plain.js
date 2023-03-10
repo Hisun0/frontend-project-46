@@ -2,8 +2,20 @@ import _ from 'lodash';
 
 const isComplexValue = (value) => _.isObject(value);
 
+const isOkeyWithoutQuotes = (value) => {
+  if (value === null) return true;
+  switch (typeof value) {
+    case 'boolean':
+      return true;
+    case 'number':
+      return true;
+    default:
+      return false;
+  }
+};
+
 const getPlainValue = (value) => {
-  if (value === true || value === null || value === false) return `${value}`;
+  if (isOkeyWithoutQuotes(value)) return `${value}`;
   if (isComplexValue(value)) return '[complex value]';
   return `'${value}'`;
 };
