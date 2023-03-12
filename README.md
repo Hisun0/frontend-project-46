@@ -46,7 +46,7 @@ Node.js v18 or higher
 
 For stylish format:
 
-    gendiff filepath1.json filepath2.json
+    gendiff path/to/file1.json another/path/file2.json
     
     {
         + follow: false
@@ -72,6 +72,8 @@ For plain format:
     
 For json format:
 
+    gendiff -f json path/to/file1.json another/path/file2.json
+    
     [{"key":"common","value":[{"key":"follow","value":false,"status":"added"},{"key":"setting1","value":"Value 1","status":"unchanged"},{"key":"setting2","value":200,"status":"deleted"},{"key":"setting3","value":{"oldValue":true,"newValue":null},"status":"changed"},{"key":"setting4","value":"blah blah","status":"added"},{"key":"setting5","value":{"key5":"value5"},"status":"added"},{"key":"setting6","value":[{"key":"doge","value":[{"key":"wow","value":{"oldValue":"","newValue":"so much"},"status":"changed"}],"status":"nested"},{"key":"key","value":"value","status":"unchanged"},{"key":"ops","value":"vops","status":"added"}],"status":"nested"}],"status":"nested"},{"key":"group1","value":[{"key":"baz","value":{"oldValue":"bas","newValue":"bars"},"status":"changed"},{"key":"foo","value":"bar","status":"unchanged"},{"key":"nest","value":{"oldValue":{"key":"value"},"newValue":"str"},"status":"changed"}],"status":"nested"},{"key":"group2","value":{"abc":12345,"deep":{"id":45}},"status":"deleted"},{"key":"group3","value":{"deep":{"id":{"number":45}},"fee":100500},"status":"added"}]
 
 </details>
