@@ -23,21 +23,26 @@ const stringify = (value, depth) => {
   return result;
 };
 
+const getNode = (data1, data2, key) => {
+  if (!Object.hasOwn(data2, key)) {
+    return ({ key, value: data1[key], status: 'deleted' });
+  } if (!Object.hasOwn(data1, key)) {
+    return ({ key, value: data2[key], status: 'added' });
+  } if (data1[key] !== data2[key]) {
+    return ({ key, value: { oldValue: data1[key], newValue: data2[key] }, status: 'changed' });
+  } if (data1[key] === data2[key]) {
+    return ({ key, value: data1[key], status: 'unchanged' });
+  }
+  throw new Error('Something went wrong.. Try again!');
+};
+
 const toDiffTree = (data1, data2) => {
   const unionKeys = getUnionKeys(data1, data2);
   const result = unionKeys.map((key) => {
     if (_.isObject(data1[key]) && _.isObject(data2[key])) {
       return { key, value: toDiffTree(data1[key], data2[key]), status: 'nested' };
-    } if (!Object.hasOwn(data2, key)) {
-      return ({ key, value: data1[key], status: 'deleted' });
-    } if (!Object.hasOwn(data1, key)) {
-      return ({ key, value: data2[key], status: 'added' });
-    } if (data1[key] !== data2[key]) {
-      return ({ key, value: { oldValue: data1[key], newValue: data2[key] }, status: 'changed' });
-    } if (data1[key] === data2[key]) {
-      return ({ key, value: data1[key], status: 'unchanged' });
     }
-    throw new Error('Something went wrong.. Try again!');
+    return getNode(data1, data2, key);
   });
   return _.sortBy(result, (el) => el.key);
 };
