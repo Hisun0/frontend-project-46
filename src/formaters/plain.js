@@ -20,22 +20,25 @@ const getPlainValue = (value) => {
   return `'${value}'`;
 };
 
+const getLine = (status, value, pathToValue) => {
+  switch (status) {
+    case 'deleted':
+      return `Property '${pathToValue}' was removed`;
+    case 'added':
+      return `Property '${pathToValue}' was added with value: ${getPlainValue(value)}`;
+    case 'changed':
+      return `Property '${pathToValue}' was updated. From ${getPlainValue(value.oldValue)} to ${getPlainValue(value.newValue)}`;
+    default:
+      return [];
+  }
+};
+
 const plain = (tree) => {
   const iter = (el, keysBefore = []) => {
     const lines = el.flatMap(({ key, value, status }) => {
       const pathToValue = [...keysBefore, key].join('.');
-      if (status === 'nested') {
-        return [`${iter(value, [...keysBefore, key])}`];
-      } if (status === 'deleted') {
-        return [`Property '${pathToValue}' was removed`];
-      } if (status === 'added') {
-        return [`Property '${pathToValue}' was added with value: ${getPlainValue(value)}`];
-      } if (status === 'changed') {
-        return [`Property '${pathToValue}' was updated. From ${getPlainValue(value.oldValue)} to ${getPlainValue(value.newValue)}`];
-      } if (status === 'unchanged') {
-        return [];
-      }
-      throw new Error('Unknown format!');
+      if (status === 'nested') return iter(value, [...keysBefore, key]);
+      return getLine(status, value, pathToValue);
     });
     return lines.join('\n');
   };
