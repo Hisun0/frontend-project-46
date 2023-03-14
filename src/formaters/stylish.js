@@ -9,6 +9,19 @@ const labels = {
 
 const makeDiffString = (indent, type, key, value, depth) => `${indent}${labels[type]}${key}: ${stringify(value, depth + 1)}`;
 
+const getLineStylish = (status, indent, key, value, depth) => {
+  switch (status) {
+    case 'deleted':
+      return makeDiffString(indent, 'deleted', key, value, depth);
+    case 'added':
+      return makeDiffString(indent, 'added', key, value, depth);
+    case 'changed':
+      return `${makeDiffString(indent, 'deleted', key, value.oldValue, depth)}\n${makeDiffString(indent, 'added', key, value.newValue, depth)}`;
+    default:
+      return makeDiffString(indent, 'unchanged', key, value, depth);
+  }
+};
+
 const stylish = (tree, spacesCount = 4, replacer = ' ') => {
   const iter = (el, depth) => {
     const indentSize = depth * spacesCount;
@@ -18,16 +31,8 @@ const stylish = (tree, spacesCount = 4, replacer = ' ') => {
     const lines = el.map(({ key, value, status }) => {
       if (status === 'nested') {
         return `${indent}${labels.nested}${key}: ${iter(value, depth + 1)}`;
-      } if (status === 'deleted') {
-        return makeDiffString(indent, 'deleted', key, value, depth);
-      } if (status === 'added') {
-        return makeDiffString(indent, 'added', key, value, depth);
-      } if (status === 'changed') {
-        return `${makeDiffString(indent, 'deleted', key, value.oldValue, depth)}\n${makeDiffString(indent, 'added', key, value.newValue, depth)}`;
-      } if (status === 'unchanged') {
-        return makeDiffString(indent, 'unchanged', key, value, depth);
       }
-      throw new Error('Unexpected status!');
+      return getLineStylish(status, indent, key, value, depth);
     });
     const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
     return result;
