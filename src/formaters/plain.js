@@ -2,42 +2,44 @@ import _ from 'lodash';
 
 const isComplexValue = (value) => _.isObject(value);
 
+const isOkeyWithoutQuotes = (value) => {
+  if (value === null) return true;
+  switch (typeof value) {
+    case 'boolean':
+      return true;
+    case 'number':
+      return true;
+    default:
+      return false;
+  }
+};
+
 const getPlainValue = (value) => {
-  if (value === true || value === null || value === false) return `${value}`;
+  if (isOkeyWithoutQuotes(value)) return `${value}`;
   if (isComplexValue(value)) return '[complex value]';
   return `'${value}'`;
 };
 
 const plain = (tree) => {
-  let keys = [];
-  const iter = (el, depth) => {
-    if (depth === 1) keys = [];
+  const iter = (el, keysBefore = []) => {
     const lines = el.flatMap(({ key, value, status }) => {
-      let str = '';
+      const pathToValue = [...keysBefore, key].join('.');
       if (status === 'nested') {
-        keys.push(key);
-        str += `${iter(value, depth + 1)}`;
-        keys.pop();
+        return [`${iter(value, [...keysBefore, key])}`];
       } if (status === 'deleted') {
-        keys.push(key);
-        str += `Property '${keys.join('.')}' was removed`;
-        keys.pop();
+        return [`Property '${pathToValue}' was removed`];
       } if (status === 'added') {
-        keys.push(key);
-        str += `Property '${keys.join('.')}' was added with value: ${getPlainValue(value)}`;
-        keys.pop();
+        return [`Property '${pathToValue}' was added with value: ${getPlainValue(value)}`];
       } if (status === 'changed') {
-        keys.push(key);
-        str += `Property '${keys.join('.')}' was updated. From ${getPlainValue(value.oldValue)} to ${getPlainValue(value.newValue)}`;
-        keys.pop();
+        return [`Property '${pathToValue}' was updated. From ${getPlainValue(value.oldValue)} to ${getPlainValue(value.newValue)}`];
       } if (status === 'unchanged') {
-        str = [];
+        return [];
       }
-      return str;
+      throw new Error('Unknown format!');
     });
     return lines.join('\n');
   };
-  return iter(tree, 1);
+  return iter(tree);
 };
 
 export default plain;

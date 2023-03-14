@@ -16,19 +16,18 @@ const stylish = (tree, spacesCount = 4, replacer = ' ') => {
     const bracketIndent = replacer.repeat(indentSize - spacesCount);
 
     const lines = el.map(({ key, value, status }) => {
-      let acc = '';
       if (status === 'nested') {
-        acc = `${indent}${labels.nested}${key}: ${iter(value, depth + 1)}`;
+        return `${indent}${labels.nested}${key}: ${iter(value, depth + 1)}`;
       } if (status === 'deleted') {
-        acc = makeDiffString(indent, 'deleted', key, value, depth);
+        return makeDiffString(indent, 'deleted', key, value, depth);
       } if (status === 'added') {
-        acc = makeDiffString(indent, 'added', key, value, depth);
+        return makeDiffString(indent, 'added', key, value, depth);
       } if (status === 'changed') {
-        acc = `${makeDiffString(indent, 'deleted', key, value.oldValue, depth)}\n${makeDiffString(indent, 'added', key, value.newValue, depth)}`;
+        return `${makeDiffString(indent, 'deleted', key, value.oldValue, depth)}\n${makeDiffString(indent, 'added', key, value.newValue, depth)}`;
       } if (status === 'unchanged') {
-        acc = makeDiffString(indent, 'unchanged', key, value, depth);
+        return makeDiffString(indent, 'unchanged', key, value, depth);
       }
-      return acc;
+      throw new Error('Unexpected status!');
     });
     const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
     return result;
