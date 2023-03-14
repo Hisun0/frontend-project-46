@@ -20,7 +20,7 @@ const getPlainValue = (value) => {
   return `'${value}'`;
 };
 
-const getLine = (status, value, pathToValue) => {
+const getPlainLine = (status, value, pathToValue) => {
   switch (status) {
     case 'deleted':
       return `Property '${pathToValue}' was removed`;
@@ -38,7 +38,7 @@ const plain = (tree) => {
     const lines = el.flatMap(({ key, value, status }) => {
       const pathToValue = [...keysBefore, key].join('.');
       if (status === 'nested') return iter(value, [...keysBefore, key]);
-      return getLine(status, value, pathToValue);
+      return getPlainLine(status, value, pathToValue);
     });
     return lines.join('\n');
   };

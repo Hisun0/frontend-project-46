@@ -9,7 +9,7 @@ const labels = {
 
 const makeDiffString = (indent, type, key, value, depth) => `${indent}${labels[type]}${key}: ${stringify(value, depth + 1)}`;
 
-const getLineStylish = (status, indent, key, value, depth) => {
+const getStylishLine = (status, indent, key, value, depth) => {
   switch (status) {
     case 'deleted':
       return makeDiffString(indent, 'deleted', key, value, depth);
@@ -32,7 +32,7 @@ const stylish = (tree, spacesCount = 4, replacer = ' ') => {
       if (status === 'nested') {
         return `${indent}${labels.nested}${key}: ${iter(value, depth + 1)}`;
       }
-      return getLineStylish(status, indent, key, value, depth);
+      return getStylishLine(status, indent, key, value, depth);
     });
     const result = ['{', ...lines, `${bracketIndent}}`].join('\n');
     return result;
