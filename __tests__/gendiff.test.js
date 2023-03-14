@@ -64,3 +64,10 @@ test('json diff between two files', () => {
 
   expect(genDiff(filepath1, filepath2, 'json')).toEqual(expectedFile);
 });
+
+test('check for format', () => {
+  const filepath1 = getFixturePath('nested_file1.json');
+  const filepath2 = getFixturePath('nested_file2.json');
+
+  expect(() => genDiff(filepath1, filepath2, 'txt')).toThrow('Unknown format!');
+});

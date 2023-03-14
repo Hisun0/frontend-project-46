@@ -30,10 +30,8 @@ const getNode = (data1, data2, key) => {
     return ({ key, value: data2[key], status: 'added' });
   } if (data1[key] !== data2[key]) {
     return ({ key, value: { oldValue: data1[key], newValue: data2[key] }, status: 'changed' });
-  } if (data1[key] === data2[key]) {
-    return ({ key, value: data1[key], status: 'unchanged' });
   }
-  throw new Error('Something went wrong.. Try again!');
+  return ({ key, value: data1[key], status: 'unchanged' });
 };
 
 const toDiffTree = (data1, data2) => {
